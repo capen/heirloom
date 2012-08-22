@@ -6,7 +6,6 @@ describe Heirloom do
   before do
     options = { :level     => 'info',
                 :base      => 'base',
-                :git       => false,
                 :exclude   => ['exclude1', 'exclude2'],
                 :region    => ['us-west-1', 'us-west-2'],
                 :directory => '/buildme',
@@ -46,8 +45,12 @@ describe Heirloom do
                   with(:base      => 'base',
                        :directory => '/buildme',
                        :exclude   => ["exclude1", "exclude2"],
-                       :git       => false,
                        :secret    => nil).
+                  and_return '/tmp/build123.tar.gz'
+    @archive_mock.should_receive(:add_metadata).
+                  with(:base      => 'base',
+                       :regions   => ["us-west-1", "us-west-2"],
+                       :encrypted => nil).
                   and_return '/tmp/build123.tar.gz'
     @archive_mock.should_receive(:upload).
                   with(:bucket_prefix   => 'base',

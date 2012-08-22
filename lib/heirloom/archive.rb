@@ -4,6 +4,7 @@ require 'heirloom/archive/builder.rb'
 require 'heirloom/archive/updater.rb'
 require 'heirloom/archive/uploader.rb'
 require 'heirloom/archive/downloader.rb'
+require 'heirloom/archive/metadata_adder.rb'
 require 'heirloom/archive/setuper.rb'
 require 'heirloom/archive/writer.rb'
 require 'heirloom/archive/authorizer.rb'
@@ -49,6 +50,10 @@ module Heirloom
       uploader.upload({ :regions => regions }.merge(args))
     end
 
+    def add_metadata(args)
+      metadata_adder.add_metadata(args)
+    end
+
     def exists?
       reader.exists?
     end
@@ -80,9 +85,39 @@ module Heirloom
 
     private
 
+    def authorizer
+      @authorizer ||= Authorizer.new :config => @config,
+                                     :name   => @name,
+                                     :id     => @id
+    end
+
+    def builder
+      @builder ||= Builder.new :config => @config,
+                               :name   => @name,
+                               :id     => @id
+    end
+
+    def destroyer
+      @destroyer ||= Destroyer.new :config => @config,
+                                   :name   => @name,
+                                   :id     => @id
+    end
+
+    def downloader
+      @downloader ||= Downloader.new :config => @config,
+                                     :name   => @name,
+                                     :id     => @id
+    end
+
     def lister
       @lister ||= Lister.new :config => @config,
                              :name   => @name
+    end
+
+    def metadata_adder
+      @metadata_adder ||= MetadataAdder.new :config => @config,
+                                            :name   => @name,
+                                            :id     => @id
     end
 
     def reader
@@ -91,10 +126,9 @@ module Heirloom
                              :id     => @id
     end
 
-    def builder
-      @builder ||= Builder.new :config => @config,
-                               :name   => @name,
-                               :id     => @id
+    def setuper
+      @setuper ||= Setuper.new :config => @config,
+                               :name   => @name
     end
 
     def updater
@@ -107,29 +141,6 @@ module Heirloom
       @uploader ||= Uploader.new :config => @config,
                                  :name   => @name,
                                  :id     => @id
-    end
-
-    def downloader
-      @downloader ||= Downloader.new :config => @config,
-                                     :name   => @name,
-                                     :id     => @id
-    end
-
-    def authorizer
-      @authorizer ||= Authorizer.new :config => @config,
-                                     :name   => @name,
-                                     :id     => @id
-    end
-
-    def destroyer
-      @destroyer ||= Destroyer.new :config => @config,
-                                   :name   => @name,
-                                   :id     => @id
-    end
-
-    def setuper
-      @setuper ||= Setuper.new :config => @config,
-                               :name   => @name
     end
 
     def verifier

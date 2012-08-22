@@ -93,6 +93,20 @@ describe Heirloom do
       @archive.exists?.should be_true
     end
 
+    it "shouild call add_metadata" do
+      mock = double('Mock')
+      args = { :config => @config_mock,
+               :name   => 'chef',
+               :id     => '123' }
+      Heirloom::MetadataAdder.should_receive(:new).
+                              with(:config => @config_mock,
+                                   :name   => 'chef',
+                                   :id     => '123').
+                              and_return mock
+      mock.should_receive(:add_metadata).with args
+      @archive.add_metadata args
+    end
+
     it "should call archive exists method and return fasle if archive doesnt exists" do
       mock = double('Mock')
       Heirloom::Reader.should_receive(:new).

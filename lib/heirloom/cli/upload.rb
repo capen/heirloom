@@ -29,16 +29,19 @@ module Heirloom
 
         @archive.destroy :keep_domain => true if @archive.exists?
                           
-        build = @archive.build :base       => @opts[:base],
-                               :directory  => @opts[:directory],
-                               :exclude    => @opts[:exclude],
-                               :git        => @opts[:git],
-                               :secret     => @opts[:secret]
+        build = @archive.build :base      => @opts[:base],
+                               :directory => @opts[:directory],
+                               :exclude   => @opts[:exclude],
+                               :secret    => @opts[:secret]
 
         unless build
           @logger.error "Build failed."
           exit 1
         end
+
+        @archive.add_metadata :base      => @opts[:base],
+                              :encrypted => @opts[:secret],
+                              :regions   => @opts[:region]
 
         @archive.upload :bucket_prefix   => @opts[:base],
                         :regions         => @opts[:region],
@@ -66,9 +69,8 @@ to be present", :type => :string
           opt :directory, "Source directory of build.", :type  => :string
           opt :exclude, "File(s) or directorie(s) to exclude. \
 Can be specified multiple times.", :type  => :string, :multi => true
-          opt :git, "Read git commit information from directory and set as archive attributes."
           opt :help, "Display Help"
-          opt :id, "ID for archive (when -g specified, assumed to be GIT sha).", :type => :string
+          opt :id, "ID for archive.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
           opt :name, "Name of archive.", :type => :string
