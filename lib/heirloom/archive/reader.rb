@@ -5,6 +5,7 @@ module Heirloom
     def initialize(args)
       @config = args[:config]
       @name = args[:name]
+      @region = args[:region]
       @domain = "heirloom_#{@name}"
       @id = args[:id]
       @logger = @config.logger
@@ -86,7 +87,8 @@ module Heirloom
     end
 
     def sdb
-      @sdb ||= AWS::SimpleDB.new :config => @config
+      @sdb ||= AWS::SimpleDB.new :config => @config,
+                                 :region => @region
     end
 
   end

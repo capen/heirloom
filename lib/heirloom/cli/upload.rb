@@ -76,7 +76,9 @@ Can be specified multiple times.", :type  => :string, :multi => true
           opt :name, "Name of archive.", :type => :string
           opt :public, "Set this archive as public readable?"
           opt :region, "Region(s) to upload archive. \
-Can be specified multiple times.", :type  => :string, :multi => true
+Can be specified multiple times.", :type    => :string, 
+                                   :multi   => true,
+                                   :default => ['us-west-1', 'us-east-1']
           opt :secret, "Encrypt the archive with given secret.", :type => :string
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
                                                     :short => :none

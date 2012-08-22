@@ -17,8 +17,9 @@ module Heirloom
 
     def initialize(args)
       @config = args[:config]
-      @name   = args[:name]
       @id     = args[:id]
+      @name   = args[:name]
+      @region = args[:region]
     end
 
     def authorize(accounts)
@@ -62,8 +63,8 @@ module Heirloom
       verifier.buckets_exist? args
     end
 
-    def domain_exists?
-      verifier.domain_exists?
+    def domains_exist?(args)
+      verifier.domains_exist?(args)
     end
 
     def destroy(args)
@@ -123,7 +124,8 @@ module Heirloom
     def reader
       @reader ||= Reader.new :config => @config,
                              :name   => @name,
-                             :id     => @id
+                             :id     => @id,
+                             :region => @region
     end
 
     def setuper

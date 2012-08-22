@@ -14,10 +14,13 @@ module Heirloom
                              :required => [:name],
                              :config   => @config
 
-        ensure_domain_exists :name => @opts[:name], :config => @config
+        ensure_domains_exist :name   => @opts[:name], 
+                             :config => @config,
+                             :regions => [ @opts[:region] ]
 
         id = @opts[:id] ? @opts[:id] : latest_id
         @archive = Archive.new :name   => @opts[:name],
+                               :region => @opts[:region],
                                :config => @config,
                                :id     => id
       end
@@ -53,6 +56,8 @@ EOS
                                                             :default => 'info'
           opt :name, "Name of archive.", :type => :string
           opt :id, "ID of the archive to display.", :type => :string
+          opt :region, "Region to download metadata.", :type    => :string,
+                                                       :default => 'us-west-1'
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
                                                     :short => :none
           opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 

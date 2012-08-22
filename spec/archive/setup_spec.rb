@@ -23,7 +23,8 @@ describe Heirloom do
     it "should create the domain if it does not exist" do
       @sdb_mock = mock 'sdb'
       Heirloom::AWS::SimpleDB.should_receive(:new).
-                              with(:config => @config_mock).
+                              with(:config => @config_mock,
+                                   :region => 'us-west-1').
                               and_return @sdb_mock
       @verifier_mock.stub :domain_exists? => false
       @sdb_mock.should_receive(:create_domain).with 'heirloom_archive'

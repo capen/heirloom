@@ -56,16 +56,18 @@ module Heirloom
         end
       end
 
-      def ensure_domain_exists(args)
+      def ensure_domains_exist(args)
         config = args[:config]
         name = args[:name]
+        regions = args[:regions]
         logger = config.logger
 
         archive = Archive.new :name   => name,
-                              :config => config
+                              :config => config,
+                              :region => regions.first
 
-        unless archive.domain_exists?
-          logger.error "Heirloom domain does not exist."
+        unless archive.domains_exist? :regions => regions
+          logger.error "Heirloom domains do not exist."
           exit 1
         end
       end

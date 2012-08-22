@@ -23,6 +23,17 @@ module Heirloom
       result
     end
 
+    def domains_exist?(args)
+      regions = args[:regions]
+      result = true
+
+      regions.each do |region|
+        result = false unless domain_exists? region
+      end
+
+      result
+    end
+
     def bucket_exists?(args)
       bucket_prefix = args[:bucket_prefix]
       region = args[:region]
@@ -41,15 +52,18 @@ module Heirloom
       end
     end
 
-    def domain_exists?
+
+    def domain_exists?(region)
       domain = "heirloom_#{@name}"
-      sdb.domain_exists? domain
-    end
-
-    private
-
-    def sdb
-      @sdb ||= AWS::SimpleDB.new :config => @config
+      sdb    = AWS::SimpleDB.new :config => @config,
+                                 :region => region
+      if sdb.domain_exists? domain
+        @logger.debug "SimpleDB domain for #{@name} exists in #{region}"
+        true
+      else
+        @logger.debug "SimpleDB domain for #{@name} does not exist in #{region}"
+        false
+      end
     end
 
   end
